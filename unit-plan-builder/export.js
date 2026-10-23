@@ -53,6 +53,7 @@ export async function createWord(plan,templateBytes){
  // Keep assessment headings with their row when a longer unit continues onto another page.
  for(const p of desc(children(tables[8],'tr')[0],'p')){let pp=children(p,'pPr')[0];if(!pp){pp=doc.createElementNS(W,'w:pPr');p.prepend(pp);}if(!children(pp,'keepNext').length)pp.appendChild(doc.createElementNS(W,'w:keepNext'));}
  for(const row of children(tables[8],'tr')){let pr=children(row,'trPr')[0];if(!pr){pr=doc.createElementNS(W,'w:trPr');row.prepend(pr);}if(!children(pr,'cantSplit').length)pr.appendChild(doc.createElementNS(W,'w:cantSplit'));}
+ for(const p of children(body,'p'))if(['RESOURCES OPTIONAL','ASSESSMENT & REPORTING / MAU','REVIEW / NEXT STEPS / TIPU'].includes(text(p))){let pp=children(p,'pPr')[0];if(!pp){pp=doc.createElementNS(W,'w:pPr');p.prepend(pp);}if(!children(pp,'keepNext').length)pp.appendChild(doc.createElementNS(W,'w:keepNext'));}
  fill(doc,cell(9,0,0),'');
  zip.file('word/document.xml',new XMLSerializer().serializeToString(doc));
  // Clear author information without changing any visible template component.
