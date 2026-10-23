@@ -50,6 +50,9 @@ export async function createWord(plan,templateBytes){
  fill(doc,cell(7,0,0),plan.resources);fill(doc,cell(8,1,0),plan.assessment);
  // Preserve assessment and reporting options, including any manual selections in the text.
  fillOptions(doc,cell(8,1,1),plan.descriptors);fillOptions(doc,cell(8,1,2),plan.reporting);
+ // Keep assessment headings with their row when a longer unit continues onto another page.
+ for(const p of desc(children(tables[8],'tr')[0],'p')){let pp=children(p,'pPr')[0];if(!pp){pp=doc.createElementNS(W,'w:pPr');p.prepend(pp);}if(!children(pp,'keepNext').length)pp.appendChild(doc.createElementNS(W,'w:keepNext'));}
+ for(const row of children(tables[8],'tr')){let pr=children(row,'trPr')[0];if(!pr){pr=doc.createElementNS(W,'w:trPr');row.prepend(pr);}if(!children(pr,'cantSplit').length)pr.appendChild(doc.createElementNS(W,'w:cantSplit'));}
  fill(doc,cell(9,0,0),'');
  zip.file('word/document.xml',new XMLSerializer().serializeToString(doc));
  // Clear author information without changing any visible template component.
