@@ -1,6 +1,6 @@
 # STP Unit Plan Studio — administrator setup
 
-The GitHub Pages frontend is a working prototype for sample editing, curriculum text scaffolding and export into the original DOCX template. Automatic Ministry document fetching is not implemented. The Science example is illustrative; its Ministry statement cells deliberately remain empty. No live Gemini connection is enabled until the school configures this optional service.
+The frontend now includes a versioned catalogue extracted from the Ministry of Education’s Science Years 0–10, August 2026 PDF: 44 topics across Years 7–10 and 326 knowledge statements. Teachers choose a year, topic and knowledge/practice statements. A programmed generator copies the exact statements into the original DOCX workflow and adds editable teaching suggestions. It is not a live document crawler. Other subjects are not connected. Gemini remains optional and is not configured by default.
 
 ## Optional Gemini service
 
@@ -16,7 +16,7 @@ The server validates shape and unit metadata. The frontend also flags non-matchi
 
 ## Without an API
 
-Load the example or create a scaffold. In **Shape the draft → AI refinements**, copy the prepared prompt into the school's Gemini account. Paste the JSON response into the site and review it before applying. This tests Gemini-generated content with the same independent Word export.
+Generate a curriculum draft or load Year 8 Evolution. In **Shape the draft → AI refinements**, copy the prepared prompt into the school's Gemini account. Paste the JSON response into the site and review it before applying. This tests Gemini-generated content with the same independent Word export.
 
 ## Template export
 
@@ -26,4 +26,12 @@ Device saving is local to this browser, with no central school database. Downloa
 
 ## Further viability testing
 
-Verify exports with 1, 4 and 6 focuses and realistic long text. Check the A3 document in desktop Word and separately after Google Docs conversion. Trial a complete Ministry extract against a department-authored benchmark plan. Then connect Gemini and compare first drafts, revisions and statement fidelity. A versioned, approved curriculum collection is the next requirement for automatic retrieval.
+Verify exports with 1, 4 and 6 focuses and realistic long text. Check the A3 document in desktop Word and separately after Google Docs conversion. Trial a complete Ministry extract against a department-authored benchmark plan. Then connect Gemini and compare first drafts, revisions and statement fidelity. Department review of the extracted catalogue and teacher-planning rules is required before wider rollout. Knowledge statements are separated by subtopic; some practice lists are shared across a curriculum section, so teachers should confirm relevance.
+
+## Curriculum source and verification
+
+Source: Ministry of Education, *The New Zealand Curriculum — Science Years 0–10*, August 2026, pp. 19–22 and 24–31. The official Tahūrangi page is linked in `science-curriculum.json`; the downloaded Ministry-authored PDF was accessed through the Bay Science mirror because the Ministry page displayed no downloads. The PDF SHA-256, source URLs, version, page numbers and statement IDs are retained in the catalogue. Line wrapping and bullet markers are normalised; statement wording is not rewritten. Text is attributed under CC BY-NC 4.0; the Ministry logo is not reused.
+
+Re-extract with `python scripts/extract-science-source.py /path/to/Science-Y0-10-12Aug26.pdf --audit /tmp/science-audit.json` (requires pdfplumber). Run `npm test` with a current Node runtime. The tests check selected-statement coverage, year boundaries, subset generation and protection against AI statement edits.
+
+First drafts are programmed suggestions, not Gemini outputs. Evolution has a hand-authored four-focus sequence; other topics use groups of up to four knowledge statements and general planning prompts. School priorities and whakataukī require local decisions; the assessment descriptors are not claimed to be the school’s approved grading framework.

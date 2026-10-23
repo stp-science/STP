@@ -1,0 +1,1 @@
+{"name":"stp-unit-plan-studio","private":true,"type":"module","scripts":{"test":"node scripts/test-curriculum.mjs"}}

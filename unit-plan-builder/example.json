@@ -1,19 +1,64 @@
 {
-  "subject":"Science","year":"Year 8","phase":"Phase 3","title":"Adaptation and Evolution","duration":"12 lessons of 50 minutes, including assessment and review","whakatauki":"",
-  "purpose":"Learning about variation and adaptation helps students explain why organisms are suited to different environments. It also helps them reason about how environmental change affects populations and why conservation decisions matter in Aotearoa New Zealand.",
-  "prior":"Year 7 Cells and Organisation: organisms are made of cells. Earlier learning about reproduction: offspring inherit characteristics from parents. Check these foundations before introducing selection.",
-  "future":"Year 10 Genetics: inherited variation provides a foundation for explaining inheritance. Later ecology learning builds on explanations of population change and environmental pressures.",
-  "knowledgeSummary":"Individuals within a species vary. Inherited features can affect survival and reproductive success in a particular environment. Over generations, natural selection can change the frequency of inherited characteristics in a population.",
-  "practicesSummary":"Compare observations, recognise patterns in variation, interpret population data and use evidence to construct causal explanations. Evaluate what a model of natural selection represents and where it is limited.",
-  "capabilities":["Knowledgeable","Thinkers","Communicators","Reflective"],
-  "resources":"Photographs of variation within one species; named New Zealand organism case studies; population data; simple selection-model materials; mini whiteboards; shared assessment and marking schedule.",
-  "assessment":"End-of-unit assessment combining retrieval questions, interpretation of a population graph and an explanation of natural selection in an unfamiliar context. Department to confirm the final task and coverage.",
-  "descriptors":"Use the agreed Junior Assessment Framework and the departmental marking schedule. Add the link to the final assessment criteria before teaching.",
-  "reporting":"Department to confirm the agreed reporting route and how this assessment contributes to reporting.",
-  "focuses":[
-    {"title":"Variation within a species","knowledge":"","practices":"","objectives":"Identify variation among individuals of the same species.\nDistinguish inherited influences from environmental influences on characteristics.","priorities":"Numeracy: organise a supplied set of measurements and describe its distribution.\nLiteracy: use compare and whereas to describe differences precisely.\nCapabilities: Thinkers — justify classifications using evidence.","vocabulary":"Tier 2: compare, classify, characteristic, evidence.\nTier 3: species, variation, inherited, environmental.","misconceptions":"All individuals of the same species are identical.\nEvery difference between individuals is inherited.","checks":"Mini whiteboards: classify examples of variation and justify one choice.\nHinge question: distinguish an inherited characteristic from a change caused by the environment."},
-    {"title":"Adaptations in different environments","knowledge":"","practices":"","objectives":"Identify structural, behavioural and physiological adaptations in named examples.\nExplain how a particular feature supports survival or reproduction in a specified environment.","priorities":"Literacy: model a feature → effect → survival explanation.\nLocal context / place: apply the explanation to a named New Zealand organism using a reliable case study.\nCapabilities: Communicators — explain a feature and respond to a partner’s challenge.","vocabulary":"Tier 2: function, advantage, explain, environment.\nTier 3: adaptation, structural, behavioural, physiological.","misconceptions":"A useful feature is equally advantageous in every environment.\nAn individual develops an inherited adaptation because it needs one.","checks":"Compare an example and non-example of an adaptation.\nExit ticket: explain how one named feature provides an advantage in its environment."},
-    {"title":"Natural selection across generations","knowledge":"","practices":"","objectives":"Explain how inherited variation, a selection pressure and differences in reproductive success can change a population over generations.\nInterpret a graph showing a change in the frequency of a characteristic.","priorities":"Numeracy: compare proportions in population data over generations.\nLiteracy: construct a causal explanation using because, therefore and over generations.\nCapabilities: Thinkers — evaluate the limitations of a selection model.","vocabulary":"Tier 2: proportion, pressure, consequence, generation.\nTier 3: natural selection, selection pressure, population, reproductive success.","misconceptions":"Individuals evolve during their lifetime.\nNatural selection always favours the strongest organism.\nAll organisms survive equally well and pass on their characteristics equally often.","checks":"Hinge question: decide whether change occurs within an individual or across generations in a population.\nMini whiteboards: predict a population change after a stated environmental pressure and explain why."},
-    {"title":"Applying explanations to environmental change","knowledge":"","practices":"","objectives":"Use evidence to explain how environmental change can affect a population.\nApply natural selection to an unfamiliar organism and distinguish evidence from an unsupported claim.","priorities":"Literacy: justify a claim with relevant evidence and a scientific explanation.\nStudent futures: evaluate an environmental claim before making a conservation recommendation.\nCapabilities: Reflective — improve an explanation after feedback.","vocabulary":"Tier 2: interpret, justify, evaluate, consequence.\nTier 3: evolution, selection pressure, population, adaptation.","misconceptions":"Environmental change always leads to a population successfully adapting.\nA change in population size alone proves that evolution has occurred.","checks":"Short unfamiliar-context response: explain an observed population pattern using evidence.\nReview a model answer and identify the causal link missing from a weaker response."}
+  "title": "Evolution",
+  "duration": "12 lessons",
+  "whakatauki": "",
+  "subject": "Science",
+  "year": "Year 8",
+  "phase": "Phase 3",
+  "purpose": "Explain how evidence supports evolution and how heritable variation, selection pressures and reproduction can change populations over generations.",
+  "prior": "Elicit prior ideas about traits, inheritance, fossils, adaptations and environmental change. Check students can distinguish an individual from a population.",
+  "future": "Use these ideas as a foundation for deeper study of inheritance, biodiversity and evidence for relationships between organisms. Confirm later sequencing with the department.",
+  "knowledgeSummary": "12 selected Ministry knowledge statements, organised into 4 learning focuses: Evidence and common ancestry; Variation and selection pressures; Natural selection over generations; New species and extinction.",
+  "practicesSummary": "Evaluate by: Analysing evidence from evolutionary contexts (e.g. fossil records, trait variations, or environmental changes) to show how theories develop over time.\nCommunicate by: Interpreting a set of fossil images to infer an organism's structure and likely environment.\nApply by: Examining the role of environmental change on extinction of species (e.g. habitat destruction, change in temperature).",
+  "resources": "Ministry of Education. The New Zealand Curriculum — Science Years 0–10, August 2026 (published 12th August 2026), Year 8, pp. 21.\nhttps://newzealandcurriculum.tahurangi.education.govt.nz/nzc---science-phases-1-4-years-0-10/5637290855.p\nPDF download mirror: https://www.bayscience.nz/post/curriculum-implementation-timeline-science-putaiao\nCrown copyright. Text reused under CC BY-NC 4.0, with attribution to the Ministry of Education.\nTeacher preparation: select age-appropriate examples and models for each focus; prepare a diagnostic task and an unfamiliar transfer task. Check practical requirements before teaching.",
+  "assessment": "Students explain a change in trait frequency in an unfamiliar population across several generations. They connect heritable variation, a named selection pressure, differential reproduction and population change, and use evidence to support the explanation. Include a fossil inference or extinction example relevant to the selected focuses.",
+  "descriptors": "Look for accurate concepts and vocabulary, a coherent explanation, and a justified link between evidence and claims. Agree task-specific descriptors and reporting judgements using the school’s Junior Assessment Framework before assessment.",
+  "reporting": "Record demonstrated learning, supporting evidence and one next step. Moderate judgements with the department using the agreed school framework.",
+  "capabilities": [
+    "Thinkers",
+    "Communicators",
+    "Reflective"
+  ],
+  "focuses": [
+    {
+      "title": "Evidence and common ancestry",
+      "knowledge": "Fossils provide evidence that organisms have appeared in many different forms throughout Earth's history, with some similar to organisms alive today (e.g. crocodiles), while others belong to extinct groups that no longer exist (e.g. trilobites).\nEvidence (e.g. fossils, shared traits, DNA evidence) supports the theory that populations and species have changed over time.\nEvidence collected to date supports the theory that all living organisms are related through common ancestry (e.g. shared features among vertebrates).",
+      "practices": "Analysing evidence from evolutionary contexts (e.g. fossil records, trait variations, or environmental changes) to show how theories develop over time.\nInterpreting a set of fossil images to infer an organism's structure and likely environment.",
+      "objectives": "Use fossil features, shared traits and DNA evidence to support an explanation of common ancestry.",
+      "priorities": "",
+      "vocabulary": "Tier 2: Evidence; infer; justify.\nTier 3: Fossil; extinct; common ancestor; DNA.",
+      "misconceptions": "A fossil is always a bone; organisms alive today are unchanged ancestors of other living species.",
+      "checks": "Give students unfamiliar fossil images. Ask them to infer structure and environment, then distinguish an observation from an inference."
+    },
+    {
+      "title": "Variation and selection pressures",
+      "knowledge": "Individuals within a species show variation in their traits (e.g. differences in male wētā head and jaw size).\nSome variation is heritable, meaning it can be passed from parents to offspring.\nFeatures of the environment that affect survival or reproduction are called selection pressures (e.g. limited food).",
+      "practices": "Analysing evidence from evolutionary contexts (e.g. fossil records, trait variations, or environmental changes) to show how theories develop over time.",
+      "objectives": "Distinguish variation from heritable variation and identify a selection pressure in a named population.",
+      "priorities": "",
+      "vocabulary": "Tier 2: Variation; distinguish; influence.\nTier 3: Trait; heritable; selection pressure; population.",
+      "misconceptions": "All variation can be inherited; an organism develops a useful inherited trait because it needs it.",
+      "checks": "Compare inherited and acquired examples. Ask which could affect the next generation and why."
+    },
+    {
+      "title": "Natural selection over generations",
+      "knowledge": "Natural selection is a process in which heritable differences between individuals influence their chances of surviving and reproducing in the presence of selection pressures (e.g. cold extremes, sun exposure).\nContemporaries Charles Darwin and Alfred Russel Wallace presented their theories on natural selection together.\nOver many generations, individuals with traits that increase survival or reproduction are more likely to leave offspring, causing those inherited traits to become more common in a population (e.g. moth camouflage increasing in frequency).\nEvolution describes these changes in traits within populations over generations, not within individuals.",
+      "practices": "Analysing evidence from evolutionary contexts (e.g. fossil records, trait variations, or environmental changes) to show how theories develop over time.",
+      "objectives": "Explain how a selection pressure changes the frequency of a heritable trait over generations; locate Darwin and Wallace in the development of the explanation.",
+      "priorities": "",
+      "vocabulary": "Tier 2: Frequency; sequence; explain.\nTier 3: Natural selection; reproduction; generation; evolution.",
+      "misconceptions": "Individuals evolve during their lifetime; natural selection gives every organism the traits it needs.",
+      "checks": "Use a simple population model over three generations. Ask students to explain who reproduces and how the population changes, without using “needed to”."
+    },
+    {
+      "title": "New species and extinction",
+      "knowledge": "Over long periods, trait changes accumulate, resulting in new species forming from a shared ancestor (e.g. kākā, kea, and kākāpō becoming different kinds of parrots).\nSome species are unable to survive environmental change and become extinct (e.g. moa).",
+      "practices": "Examining the role of environmental change on extinction of species (e.g. habitat destruction, change in temperature).",
+      "objectives": "Use shared ancestry and environmental change to explain how lineages may diverge or become extinct.",
+      "priorities": "",
+      "vocabulary": "Tier 2: Accumulate; contrast; consequence.\nTier 3: Species; speciation; extinction; ancestor.",
+      "misconceptions": "Every species can adapt quickly enough to survive any environmental change.",
+      "checks": "Compare a branching ancestry diagram with an extinction case. Ask students to justify what each can and cannot show."
+    }
   ]
 }
