@@ -34,4 +34,14 @@ Source: Ministry of Education, *The New Zealand Curriculum — Science Years 0�
 
 Re-extract with `python scripts/extract-science-source.py /path/to/Science-Y0-10-12Aug26.pdf --audit /tmp/science-audit.json` (requires pdfplumber). Run `npm test` with a current Node runtime. The tests check selected-statement coverage, year boundaries, subset generation and protection against AI statement edits.
 
-First drafts are programmed suggestions, not Gemini outputs. Evolution has a hand-authored four-focus sequence; other topics use groups of up to four knowledge statements and general planning prompts. School priorities and whakataukī require local decisions; the assessment descriptors are not claimed to be the school’s approved grading framework.
+First drafts are programmed suggestions, not Gemini outputs. All 44 topics use topic-specific rationales, factual knowledge summaries and suggested prior/future curriculum connections. Named conceptual sections determine focus counts; the full Evolution example currently has eight focuses. There is no required count of four. School priorities and whakataukī require local decisions; the assessment descriptors are not claimed to be the school’s approved grading framework.
+
+## School-guidance revision
+
+Reviewed: *STP Curriculum Staff PLD 2027 Complete* v9 (22nd October 2026), *STP Unit Plan Staff Guide* (22nd October 2026), the current planning guide at https://stp-science.github.io/STP/unit-plan/, and template v21. The current website and Gary’s later instructions take precedence over older examples in the guide.
+
+Purpose explains value; knowledge summaries describe the knowledge rather than statement counts; prior/future connections name specific prerequisite and subsequent learning. Connections are curriculum-progression suggestions: confirm them against the department’s actual taught programme. The app displays that distinction and leaves these fields editable. The school’s full year-by-year sequence is not configured.
+
+Assessment End Point is blank on generation. Assessment Descriptors (three options) and Reporting (six options) use the exact template choices as unticked checkboxes. AI refinements cannot add assessment prose or change the teacher’s assessment selections. Word export preserves every original option and marks only selected choices. School Priorities remain optional, other-area connections and post-teaching review remain blank. Focus count follows the concepts, with add/remove/reorder available.
+
+The 2026 Junior Science unit-changes guide is also used for supported school-programme links (including Evolution, forces, Waves, Plate Tectonics, and Ecosystems & Water). It is a partial programme record. Other links remain labelled Ministry-progression suggestions and should be checked against actual taught units. No full school timetable is inferred.

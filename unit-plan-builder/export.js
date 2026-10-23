@@ -18,7 +18,12 @@ function fill(doc,cell,value,keepHeading=false,regular=true){
  if(heading)cell.appendChild(heading);
  for(const line of String(value||'').split('\n'))cell.appendChild(paragraph(doc,base,line,regular));
 }
-function fillOptions(doc,cell,value){const ps=children(cell,'p'),options=ps.filter(p=>text(p).includes('☐')).map(p=>p.cloneNode(true));fill(doc,cell,value);for(const p of options)cell.appendChild(p);}
+function fillOptions(doc,cell,value){
+ const selected=new Set(String(value||'').split('\n').filter(Boolean));
+ const options=children(cell,'p').filter(p=>text(p).includes('☐')).map(p=>p.cloneNode(true));
+ fill(doc,cell,'');
+ for(const p of options){const label=text(p).replace('☐','').trim();if(selected.has(label))for(const t of desc(p,'t'))t.textContent=t.textContent.replace('☐','☒');cell.appendChild(p);}
+}
 export async function createWord(plan,templateBytes){
  validatePlan(plan);
  const zip=await JSZip.loadAsync(templateBytes);const xml=await zip.file('word/document.xml').async('string');

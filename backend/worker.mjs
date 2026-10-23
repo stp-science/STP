@@ -1,4 +1,5 @@
 import {rules,planSchema,validatePlan} from '../unit-plan-builder/model.js';
+import {preserveAssessment,assertCurriculumPreserved} from '../unit-plan-builder/curriculum.js';
 const limits=new Map();
 export default {
  async fetch(request,env){
@@ -24,6 +25,7 @@ export default {
    const result=await upstream.json();const candidate=result.candidates?.[0];if(candidate?.finishReason&&candidate.finishReason!=='STOP')return reply({error:'Gemini returned an incomplete response. Your plan is unchanged.'},502);
    const text=candidate?.content?.parts?.filter(p=>!p.thought).map(p=>p.text||'').join('');if(!text)return reply({error:'Gemini returned no plan.'},502);
    const plan=validatePlan(JSON.parse(text));for(const key of ['subject','year','phase','title','duration','whakatauki'])if(plan[key]!==data.plan[key])return reply({error:'Gemini changed the unit details. Please retry.'},502);
+   preserveAssessment(data.plan,plan);assertCurriculumPreserved(data.plan,plan,source);
    return reply({plan});
   }catch(e){return reply({error:e.name==='TimeoutError'?'Gemini timed out. Your plan is unchanged.':'The draft could not be processed. Check your input and retry.'},400);}
  }
