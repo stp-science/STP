@@ -24,7 +24,7 @@ function fillOptions(doc,cell,value){
  fill(doc,cell,'');
  for(const p of options){const label=text(p).replace('☐','').trim();if(selected.has(label))for(const t of desc(p,'t'))t.textContent=t.textContent.replace('☐','☒');cell.appendChild(p);}
 }
-export async function createWord(plan,templateBytes){
+export async function createWord(plan,templateBytes,source={}){
  validatePlan(plan);
  const zip=await JSZip.loadAsync(templateBytes);const xml=await zip.file('word/document.xml').async('string');
  const doc=new DOMParser().parseFromString(xml,'application/xml');if(doc.querySelector('parsererror'))throw Error('The Word template could not be read.');
@@ -62,6 +62,7 @@ export async function createWord(plan,templateBytes){
  fill(doc,cell(9,0,0),'');
  zip.file('word/document.xml',new XMLSerializer().serializeToString(doc));
  // Clear author information without changing any visible template component.
- const core=zip.file('docProps/core.xml');if(core){const c=new DOMParser().parseFromString(await core.async('string'),'application/xml');for(const n of [...c.getElementsByTagName('dc:creator'),...c.getElementsByTagName('cp:lastModifiedBy')])n.textContent='';zip.file('docProps/core.xml',new XMLSerializer().serializeToString(c));}
+ const core=zip.file('docProps/core.xml');if(core||source.title){const c=new DOMParser().parseFromString(core?await core.async('string'):'<?xml version="1.0" encoding="UTF-8"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"/>','application/xml');for(const n of [...c.getElementsByTagName('dc:creator'),...c.getElementsByTagName('cp:lastModifiedBy')])n.textContent='';if(source.title){let description=c.getElementsByTagName('dc:description')[0];if(!description){description=c.createElementNS('http://purl.org/dc/elements/1.1/','dc:description');c.children[0].appendChild(description);}description.textContent=`Curriculum source: Ministry of Education. ${source.title}. ${source.url||''}. ${source.license||''}`;}zip.file('docProps/core.xml',new XMLSerializer().serializeToString(c));}
+ if(source.title&&!core){const rel=zip.file('_rels/.rels');if(rel){let text=await rel.async('string');if(!text.includes('metadata/core-properties'))text=text.replace('</Relationships>','<Relationship Id="rIdSTPCurriculumSource" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>');zip.file('_rels/.rels',text);}const types=zip.file('[Content_Types].xml');if(types){let text=await types.async('string');if(!text.includes('/docProps/core.xml'))text=text.replace('</Types>','<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>');zip.file('[Content_Types].xml',text);}}
  return zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',compression:'DEFLATE'});
 }

@@ -45,3 +45,9 @@ Purpose explains value; knowledge summaries describe the knowledge rather than s
 Assessment End Point is blank on generation. Assessment Descriptors (three options) and Reporting (six options) use the exact template choices as unticked checkboxes. AI refinements cannot add assessment prose or change the teacher’s assessment selections. Word export preserves every original option and marks only selected choices. School Priorities remain optional, other-area connections and post-teaching review remain blank. Focus count follows the concepts, with add/remove/reorder available.
 
 The 2026 Junior Science unit-changes guide is also used for supported school-programme links (including Evolution, forces, Waves, Plate Tectonics, and Ecosystems & Water). It is a partial programme record. Other links remain labelled Ministry-progression suggestions and should be checked against actual taught units. No full school timetable is inferred.
+
+## Focus content and list revision
+
+Resources is blank on generation and is preserved during refinements. Source attribution stays in source metadata and is included in the exported Word document properties. All learning focuses render as an always-open ordered list, with no details/summary collapse controls.
+
+`focus-content.js` supplies specific teacher objectives, vocabulary, misconceptions and formative checks for the 154 non-Evolution conceptual sections. Evolution retains eight separately authored sections, with selected official practices repeated where they are explicitly developed. The generic describe-the-focus and common check/misconception fallback has been removed. The content is programmed drafting support, not live AI generation or curriculum approval.

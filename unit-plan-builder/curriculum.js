@@ -1,6 +1,6 @@
 import {schoolConnections} from './school-connections.js';
 import {profiles} from './planning-profiles.js';
-import {notes} from './teaching-notes.js';
+import {focusContent} from './focus-content.js';
 import {emptyFocus,validatePlan} from './model.js';
 const join=items=>items.map(s=>s.text).join('\n');
 const words=s=>s.toLowerCase().match(/[a-zāēīōū]{4,}/g)||[];
@@ -15,16 +15,19 @@ export function defaultPracticeIds(unit){
 const stripExamples=s=>s.replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').replace(/\s+([,.;:])/g,'$1').trim();
 function brief(s){return stripExamples(s).split(/(?<=[.!?])\s+/)[0];}
 function practiceSummary(ps){return ps.map(s=>stripExamples(s.text).replace(/^(Planning|Designing|Conducting|Using|Analysing|Interpreting|Examining|Observing|Comparing|Constructing|Measuring|Identifying|Gathering|Selecting|Testing|Making|Organising|Evaluating|Reporting|Representing|Calculating|Formulating|Predicting|Discussing|Researching|Labelling|Collecting|Presenting|Systematically making|Systematically observing)/,v=>({'Planning':'Plan','Designing':'Design','Conducting':'Conduct','Using':'Use','Analysing':'Analyse','Interpreting':'Interpret','Examining':'Examine','Observing':'Observe','Comparing':'Compare','Constructing':'Construct','Measuring':'Measure','Identifying':'Identify','Gathering':'Gather','Selecting':'Select','Testing':'Test','Making':'Make','Organising':'Organise','Evaluating':'Evaluate','Reporting':'Report','Representing':'Represent','Calculating':'Calculate','Formulating':'Formulate','Predicting':'Predict','Discussing':'Discuss','Researching':'Research','Labelling':'Label','Collecting':'Collect','Presenting':'Present','Systematically making':'Make systematically','Systematically observing':'Observe systematically'}[v]))).join(' ');}
-export function preserveAssessment(before,after){for(const k of ['assessment','descriptors','reporting'])after[k]=before[k]||'';return after;}
+export function preserveAssessment(before,after){for(const k of ['resources','assessment','descriptors','reporting'])after[k]=before[k]||'';return after;}
 export function buildCurriculumPlan(catalogue,unit,selection,meta){
  const ks=unit.knowledge.filter(s=>selection.knowledge.includes(s.id)),ps=unit.practices.filter(s=>selection.practices.includes(s.id));
  if(!ks.length||!ps.length)throw Error('Select at least one knowledge statement and one practice statement.');
  const profile=profiles[unit.title];if(!profile)throw Error('Planning guidance for this topic is unavailable.');
  const selectedK=new Set(ks.map(s=>s.id));
  const groups=profile.groups.map(([start,title],i)=>({title,k:unit.knowledge.slice(start,profile.groups[i+1]?.[0]).filter(s=>selectedK.has(s.id)),p:[]})).filter(g=>g.k.length);
- // Assign practices by their conceptual overlap, not by cycling through rows.
- for(const st of ps){const terms=words(st.text).filter(w=>!stop.has(w));const scores=groups.map(g=>{const text=(g.title+' '+join(g.k)).toLowerCase();return terms.reduce((n,w)=>n+(text.includes(w)?1:0),0);});const best=scores.indexOf(Math.max(...scores));groups[best].p.push(st);}
- const [vocabulary,misconception]=notes[unit.title]||['',''];
+ if(unit.title==='Evolution'){
+  const positions=[[1,2,3,4,5,7],[0,1],[6]];
+  for(const st of ps){const allowed=new Set(positions[unit.practices.findIndex(p=>p.id===st.id)].map(i=>profile.groups[i][1]));let matched=false;for(const g of groups)if(allowed.has(g.title)){g.p.push(st);matched=true;}if(!matched)groups[0].p.push(st);}
+ }else{
+  for(const st of ps){const terms=words(st.text).filter(w=>!stop.has(w));const scores=groups.map(g=>{const text=(g.title+' '+join(g.k)).toLowerCase();return terms.reduce((n,w)=>n+(text.includes(w)?1:0),0);});const best=scores.indexOf(Math.max(...scores));groups[best].p.push(st);}
+ }
  const evoObjectives={
   'Fossils as evidence':'Infer an organism’s structure and likely environment from fossil features.',
   'Comparing evidence for change':'Explain how fossil, shared-trait and DNA evidence supports change in populations and species.',
@@ -47,20 +50,18 @@ export function buildCurriculumPlan(catalogue,unit,selection,meta){
  };
  const focuses=groups.map((g,i)=>{
   const f=emptyFocus(g.title);f.knowledge=join(g.k);f.practices=join(g.p);
-  f.objectives=unit.title==='Evolution'&&evoObjectives[g.title]?evoObjectives[g.title]:`Describe and explain ${g.title.charAt(0).toLowerCase()+g.title.slice(1)}, using the selected scientific ideas and an appropriate example.`;
-  if(g.p.length&&unit.title!=='Evolution')f.objectives+='\n'+practiceSummary(g.p);
-  // Include only technical terms that occur in the selected focus, where possible.
-  const terms=vocabulary.split('; ').filter(t=>{const root=t.replace(/s$/,'').toLowerCase();return (g.title+' '+f.knowledge+' '+f.practices).toLowerCase().includes(root);});
-  f.vocabulary=`Tier 2: compare; explain; evidence; interpret.\nTier 3: ${(terms.length?terms:vocabulary.split('; ').slice(0,4)).join('; ')}.`;
-  f.misconceptions=misconception;
-  f.checks=`Mini whiteboards: distinguish a correct explanation of ${g.title.toLowerCase()} from the stated misconception. Exit ticket: apply one selected concept to a new example and justify the explanation.`;
-  if(unit.title==='Evolution'){const [terms,mis,check]=evoTeaching[g.title];f.vocabulary=`Tier 2: evidence; infer; compare; justify.\nTier 3: ${terms}.`;f.misconceptions=mis;f.checks=check;}
+  if(unit.title==='Evolution'){
+   f.objectives=evoObjectives[g.title];const [terms,mis,check]=evoTeaching[g.title];f.vocabulary=`Tier 2: evidence; infer; compare; justify.\nTier 3: ${terms}.`;f.misconceptions=mis;f.checks=check;
+  }else{
+   const draft=focusContent[unit.title]?.[g.title];if(!draft)throw Error('Focus-specific planning is unavailable for '+unit.title+': '+g.title);
+   f.objectives=draft.objectives;f.vocabulary=`Tier 2: explain; compare; interpret; justify.\nTier 3: ${draft.vocabulary}.`;f.misconceptions=draft.misconceptions;f.checks=draft.checks;
+  }
   f.priorities=i===0?'Capabilities — Thinkers: distinguish claims from evidence. Communicators: explain a scientific claim and respond to a partner’s question.':'';
   return f;
  });
  const pages=[...new Set([...ks,...ps].map(s=>s.page))].sort((a,b)=>a-b);
  const school=schoolConnections[unit.title];
- const source={documentId:catalogue.documentId,unitId:unit.id,title:`${catalogue.title}, ${catalogue.version}, Year ${unit.year}, pp. ${pages.join(', ')}`,url:catalogue.ministryUrl,mirrorUrl:catalogue.mirrorUrl,knowledge:join(ks),practices:join(ps),knowledgeIds:ks.map(s=>s.id),practiceIds:ps.map(s=>s.id),pages,year:unit.year,generatorVersion:2,connectionBasis:school?'School programme links drawn from the 2026 Junior Science unit-changes guide. Confirm the sequence for the cohort being planned.':'Suggested links from the Ministry year-by-year progression; confirm against the department’s taught sequence.',license:catalogue.license};
+ const source={documentId:catalogue.documentId,unitId:unit.id,title:`${catalogue.title}, ${catalogue.version}, Year ${unit.year}, pp. ${pages.join(', ')}`,url:catalogue.ministryUrl,mirrorUrl:catalogue.mirrorUrl,knowledge:join(ks),practices:join(ps),knowledgeIds:ks.map(s=>s.id),practiceIds:ps.map(s=>s.id),pages,year:unit.year,generatorVersion:3,connectionBasis:school?'School programme links drawn from the 2026 Junior Science unit-changes guide. Confirm the sequence for the cohort being planned.':'Suggested links from the Ministry year-by-year progression; confirm against the department’s taught sequence.',license:catalogue.license};
  const fullUnit=ks.length===unit.knowledge.length;
  const summary=fullUnit?profile.summary:groups.map(g=>g.k.map(st=>brief(st.text)).join(' ')).join(' ');
  const plan={...meta,subject:'Science',year:`Year ${unit.year}`,phase:`Phase ${unit.phase}`,title:meta.title||unit.title,duration:meta.duration||'',whakatauki:meta.whakatauki||'',
@@ -69,7 +70,7 @@ export function buildCurriculumPlan(catalogue,unit,selection,meta){
   future:school?.future||profile.future,
   knowledgeSummary:summary,
   practicesSummary:practiceSummary(ps),
-  resources:`Ministry of Education. ${source.title}.\n${source.url}\nPDF download mirror: ${source.mirrorUrl}\n${catalogue.license}\nShared teaching resources: add links to the department’s texts, models and practical resources where appropriate.`,
+  resources:'',
   assessment:'',descriptors:'',reporting:'',
   capabilities:['Thinkers','Communicators'],focuses};
  return {plan:validatePlan(plan),source};
