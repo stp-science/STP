@@ -58,7 +58,7 @@ function audio() {
   if (!soundOn) return null;
   try {
     const ctx = audioCtx || (audioCtx = new (window.AudioContext || window.webkitAudioContext)());
-    if (ctx.state === 'suspended') ctx.resume();
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
     return ctx;
   } catch { return null; }
 }
@@ -223,4 +223,10 @@ $('sound').onclick = () => {
 $('full').onclick = async () => {
   try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch {}
 };
+// Enable audio by default and unlock it on the first ordinary interaction.
+function unlockAudio() { if (soundOn) audio(); }
+document.addEventListener('pointerdown', unlockAudio, { capture: true });
+document.addEventListener('keydown', unlockAudio, { capture: true });
 newGame();
+const initialAudio = audio();
+if (initialAudio && initialAudio.state === 'running') meow();
