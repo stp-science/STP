@@ -93,6 +93,19 @@ function squeak(delay = 0) {
   for (let i = 0; i < 3; i++)
     voice([[0,1700],[.035,2900],[.1,2050]], .12, .055, 'sine', delay + i * .15);
 }
+function mouseLaugh() {
+  // Five breathy, high-pitched "he-he-he" syllables with rising/falling inflection.
+  for (let i = 0; i < 5; i++) {
+    const delay = i * .17, pitch = 1050 + (i % 2) * 170;
+    voice([[0,pitch],[.045,pitch * 1.36],[.12,pitch * .9]], .14, .085, 'triangle', delay);
+    voice([[0,pitch * 2],[.045,pitch * 2.5],[.12,pitch * 1.8]], .13, .035, 'sine', delay);
+  }
+}
+function mouseYell() {
+  // A sustained open-vowel squeal, falling in pitch: "aaaaah!".
+  voice([[0,1150],[.1,1550],[.36,1200],[.72,700],[.98,450]], 1.05, .11, 'sawtooth', 0, 2400);
+  voice([[0,575],[.1,775],[.36,600],[.72,350],[.98,225]], 1.05, .065, 'triangle');
+}
 function suspense(closeness) {
   const ctx = audio(); if (!ctx || ctx.currentTime < suspenseAt) return;
   const pace = .68 - .43 * closeness;
@@ -184,14 +197,14 @@ function finish(number, caught) {
     $('result').textContent = `Caught! The cat caught Mouse ${number}.`;
     $('hint').textContent = 'Pinned under a paw — one point to the cat!';
     flipMouse();
-    squeak(); meow(.3);
+    mouseYell(); meow(.85);
   } else {
     escapes++;
     pose(1090, 320, 0, 860, 228);
     $('mousePosition').setAttribute('visibility', 'hidden');
     $('result').textContent = `Mouse ${number} escaped!`;
     $('hint').textContent = 'Safely inside the hole. The cat was too late!';
-    squeak();
+    mouseLaugh();
   }
   $('escapes').textContent = escapes; $('catches').textContent = catches;
   if (used.size === 6) {
