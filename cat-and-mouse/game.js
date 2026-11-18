@@ -1,6 +1,6 @@
 const $ = id => document.getElementById(id);
 const colors = ['#88969b','#b2a191','#949b7e','#9f91ac','#ac8d85','#7d9e9b'];
-let used = new Set(), caughtMice = new Set(), animating = false, escapes = 0, catches = 0, soundOn = false, audioCtx;
+let used = new Set(), caughtMice = new Set(), animating = false, escapes = 0, catches = 0, soundOn = true, audioCtx;
 for (let i = 1; i <= 6; i++) {
   const button = document.createElement('button');
   button.className = 'mouse-card';
@@ -35,6 +35,7 @@ function newGame() {
   used = new Set(); escapes = catches = 0;
   $('escapes').textContent = $('catches').textContent = '0';
   $('arena').className = 'arena';
+  resetMouse();
   $('catchPaw').setAttribute('visibility', 'hidden');
   $('mousePosition').setAttribute('visibility', 'visible');
   $('runnerNumber').textContent = '?';
@@ -50,23 +51,72 @@ function newGame() {
   $('chooseHint').textContent = 'Each mouse can be selected once per game.';
   updateControls();
 }
-function tone(frequency, duration = .12) {
-  if (!soundOn) return;
+// All sounds are synthesised locally: animal calls and an original accelerating pulse.
+const voices = new Set();
+let suspenseAt = 0;
+function audio() {
+  if (!soundOn) return null;
   try {
     const ctx = audioCtx || (audioCtx = new (window.AudioContext || window.webkitAudioContext)());
-    ctx.resume();
-    const oscillator = ctx.createOscillator(), gain = ctx.createGain();
-    oscillator.connect(gain); gain.connect(ctx.destination);
-    oscillator.frequency.value = frequency;
-    gain.gain.setValueAtTime(.035, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + duration);
-    oscillator.start(); oscillator.stop(ctx.currentTime + duration);
-  } catch {}
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  } catch { return null; }
+}
+function voice(points, duration, volume, type = 'sine', delay = 0, formant = 0) {
+  const ctx = audio(); if (!ctx) return;
+  const t = ctx.currentTime + delay, oscillator = ctx.createOscillator(), gain = ctx.createGain();
+  oscillator.type = type;
+  points.forEach(([offset, frequency], i) => {
+    const param = oscillator.frequency;
+    if (i === 0) param.setValueAtTime(frequency, t + offset);
+    else param.exponentialRampToValueAtTime(frequency, t + offset);
+  });
+  if (formant) {
+    const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.Q.value = 2;
+    filter.frequency.setValueAtTime(formant, t);
+    filter.frequency.exponentialRampToValueAtTime(formant * .55, t + duration);
+    oscillator.connect(filter); filter.connect(gain);
+  } else oscillator.connect(gain);
+  gain.connect(ctx.destination);
+  gain.gain.setValueAtTime(.0001, t);
+  gain.gain.exponentialRampToValueAtTime(volume, t + .025);
+  gain.gain.exponentialRampToValueAtTime(.0001, t + duration);
+  voices.add(oscillator);
+  oscillator.onended = () => { voices.delete(oscillator); gain.disconnect(); };
+  oscillator.start(t); oscillator.stop(t + duration + .02);
+}
+function meow(delay = 0) {
+  voice([[0,430],[.13,710],[.28,640],[.68,300]], .72, .12, 'sawtooth', delay, 1400);
+  voice([[0,215],[.13,355],[.28,320],[.68,150]], .72, .045, 'triangle', delay);
+}
+function squeak(delay = 0) {
+  for (let i = 0; i < 3; i++)
+    voice([[0,1700],[.035,2900],[.1,2050]], .12, .055, 'sine', delay + i * .15);
+}
+function suspense(closeness) {
+  const ctx = audio(); if (!ctx || ctx.currentTime < suspenseAt) return;
+  const pace = .68 - .43 * closeness;
+  suspenseAt = ctx.currentTime + pace;
+  voice([[0,94],[.07,49],[.16,38]], .18, .10, 'triangle');
+  voice([[0,77],[.06,40],[.13,31]], .15, .08, 'triangle', .12);
+}
+function stopSounds() {
+  for (const oscillator of voices) { try { oscillator.stop(); } catch {} }
+  voices.clear(); suspenseAt = 0;
+}
+function resetMouse() {
+  $('arena').classList.remove('mouse-flipped');
+  $('runnerSprite').setAttribute('href', '#mouse');
+}
+function flipMouse() {
+  $('runnerSprite').setAttribute('href', '#deadMouse');
+  $('arena').classList.add('mouse-flipped');
 }
 const mix = (a, b, t) => a + (b - a) * t;
 const clamp = t => Math.max(0, Math.min(1, t));
 function chase(number) {
   if (animating || used.has(number) || used.size === 6) return;
+  stopSounds();
   animating = true; used.add(number);
   const caught = caughtMice.has(number), button = mice[number - 1];
   button.classList.add('used', 'racing');
@@ -74,6 +124,9 @@ function chase(number) {
   button.setAttribute('aria-label', `Mouse ${number}, selected`);
   updateControls();
   $('arena').className = 'arena running';
+  resetMouse();
+  meow();
+  squeak(.18);
   $('catchPaw').setAttribute('visibility', 'hidden');
   $('mousePosition').setAttribute('visibility', 'visible');
   $('runnerNumber').textContent = number;
@@ -83,7 +136,8 @@ function chase(number) {
   $('chooseHint').textContent = 'The chase is on!';
   pose(350, 294, 1, 90, 228);
   const start = performance.now(), duration = 3900;
-  let beat = 0, entering = false, pouncing = false;
+  let entering = false, pouncing = false;
+  suspenseAt = 0;
   function frame(now) {
     const p = clamp((now - start) / duration);
     if (!caught) {
@@ -108,15 +162,17 @@ function chase(number) {
       pose(mix(820, 855, landing), 294, 1, catX, catY);
       // The extended foreground paw lands across the mouse; it stays visible underneath.
       $('catchPaw').setAttribute('visibility', t > .38 ? 'visible' : 'hidden');
+      if (landing >= 1) flipMouse();
     }
-    if (p > beat && p < .8) { tone(170 + 120 * p, .07); beat += .08; }
+    if (p < .92) suspense(clamp(p / .92));
     if (p < 1) requestAnimationFrame(frame); else finish(number, caught);
   }
   requestAnimationFrame(frame);
 }
 function finish(number, caught) {
   animating = false;
-  $('arena').className = caught ? 'arena caught' : 'arena escaped';
+  stopSounds();
+  $('arena').className = caught ? 'arena caught mouse-flipped' : 'arena escaped';
   const button = mice[number - 1];
   button.classList.remove('racing');
   button.querySelector('.outcome').textContent = caught ? 'Caught' : 'Escaped';
@@ -127,14 +183,15 @@ function finish(number, caught) {
     $('catchPaw').setAttribute('visibility', 'visible');
     $('result').textContent = `Caught! The cat caught Mouse ${number}.`;
     $('hint').textContent = 'Pinned under a paw — one point to the cat!';
-    tone(180, .4);
+    flipMouse();
+    squeak(); meow(.3);
   } else {
     escapes++;
     pose(1090, 320, 0, 860, 228);
     $('mousePosition').setAttribute('visibility', 'hidden');
     $('result').textContent = `Mouse ${number} escaped!`;
     $('hint').textContent = 'Safely inside the hole. The cat was too late!';
-    tone(660, .2); setTimeout(() => tone(880, .25), 180);
+    squeak();
   }
   $('escapes').textContent = escapes; $('catches').textContent = catches;
   if (used.size === 6) {
@@ -147,7 +204,8 @@ $('newGame').onclick = newGame;
 $('sound').onclick = () => {
   soundOn = !soundOn;
   $('sound').textContent = soundOn ? 'Sound on' : 'Sound off';
-  $('sound').setAttribute('aria-pressed', soundOn); tone(440);
+  $('sound').setAttribute('aria-pressed', soundOn);
+  if (soundOn) meow(); else stopSounds();
 };
 $('full').onclick = async () => {
   try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch {}
