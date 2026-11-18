@@ -135,7 +135,7 @@ function chase(number) {
   $('hint').textContent = 'The cat is closing in…';
   $('chooseHint').textContent = 'The chase is on!';
   pose(350, 294, 1, 90, 228);
-  const start = performance.now(), duration = 3900;
+  const start = performance.now(), duration = 7000;
   let entering = false, pouncing = false;
   suspenseAt = 0;
   function frame(now) {
