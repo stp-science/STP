@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wheel of Names · STP GATA Games</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🎡 Wheel of Names</h1>
+  <p class="sub">STP GATA Games</p>
+</header>
+
+<main>
+  <section class="wheel-area">
+    <div class="wheel-wrap">
+      <div class="pointer" aria-hidden="true"></div>
+      <canvas id="wheel" width="800" height="800" aria-label="Wheel of names"></canvas>
+      <button id="spinBtn" class="spin-center">SPIN</button>
+    </div>
+    <p class="hint">Click the wheel or press <kbd>Space</kbd> to spin</p>
+  </section>
+
+  <aside class="panel">
+    <div class="tabs">
+      <button class="tab active" data-tab="entries">Entries <span id="count">0</span></button>
+      <button class="tab" data-tab="results">Results <span id="rcount">0</span></button>
+    </div>
+
+    <div id="tab-entries" class="tab-body">
+      <textarea id="names" spellcheck="false" placeholder="One name per line"></textarea>
+      <div class="row">
+        <button id="shuffleBtn">🔀 Shuffle</button>
+        <button id="sortBtn">🔤 Sort</button>
+        <button id="clearBtn">🗑️ Clear</button>
+      </div>
+      <label class="check"><input type="checkbox" id="removeWinner"> Remove winner after each spin</label>
+      <label class="check"><input type="checkbox" id="sound" checked> Sound</label>
+    </div>
+
+    <div id="tab-results" class="tab-body hidden">
+      <ol id="results"></ol>
+      <div class="row">
+        <button id="restoreBtn">↩️ Put all back on wheel</button>
+        <button id="clearResultsBtn">🗑️ Clear results</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<dialog id="winnerDialog">
+  <p class="label">We have a winner!</p>
+  <h2 id="winnerName"></h2>
+  <div class="row">
+    <button id="closeBtn">Close</button>
+    <button id="removeBtn" class="primary">Remove from wheel</button>
+  </div>
+</dialog>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<script src="script.js"></script>
+</body>
+</html>
